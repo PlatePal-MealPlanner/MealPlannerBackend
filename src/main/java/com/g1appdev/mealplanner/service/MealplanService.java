@@ -1,14 +1,15 @@
 package com.g1appdev.mealplanner.service;  
 
-import com.g1appdev.mealplanner.entity.MealplanEntity;  
-import com.g1appdev.mealplanner.entity.UserEntity; // Import UserEntity  
-import com.g1appdev.mealplanner.repository.MealplanRepository;  
-import com.g1appdev.mealplanner.repository.UserRepository; // Import UserRepository  
-import org.springframework.beans.factory.annotation.Autowired;  
+import java.util.List;
+import java.util.Optional;  
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;  
 
-import java.util.List;  
-import java.util.Optional;  
+import com.g1appdev.mealplanner.entity.MealplanEntity;
+import com.g1appdev.mealplanner.entity.UserEntity;
+import com.g1appdev.mealplanner.repository.MealplanRepository;
+import com.g1appdev.mealplanner.repository.UserRepository;  
 
 @Service  
 public class MealplanService {  
@@ -17,7 +18,7 @@ public class MealplanService {
     private MealplanRepository mealplanRepository;  
 
     @Autowired  
-    private UserRepository userRepository; // Inject UserRepository  
+    private UserRepository userRepository;  
 
     public List<MealplanEntity> getAllMealPlans() {  
         return mealplanRepository.findAll();  
@@ -28,7 +29,7 @@ public class MealplanService {
     }  
 
     public MealplanEntity createMealPlan(MealplanEntity mealplan) {  
-        // Validate the user exists before saving the meal plan  
+         
         Optional<UserEntity> userOptional = userRepository.findById(mealplan.getUser().getUserId());  
         if (userOptional.isPresent()) {  
             return mealplanRepository.save(mealplan);  
@@ -41,7 +42,7 @@ public class MealplanService {
         MealplanEntity mealplan = mealplanRepository.findById(id)  
                 .orElseThrow(() -> new RuntimeException("MealPlan not found"));  
 
-        // Validate the user exists before updating  
+         
         Optional<UserEntity> userOptional = userRepository.findById(mealplanDetails.getUser().getUserId());  
         if (userOptional.isPresent()) {  
             mealplan.setMealDate(mealplanDetails.getMealDate());  

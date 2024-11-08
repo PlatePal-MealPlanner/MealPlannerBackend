@@ -3,7 +3,7 @@ package com.g1appdev.mealplanner.service;
 import java.util.List;  
 
 import org.springframework.beans.factory.annotation.Autowired;  
-import org.springframework.stereotype.Service; // Use standard exception
+import org.springframework.stereotype.Service;
 
 import com.g1appdev.mealplanner.entity.FavoriteRecipeEntity;
 import com.g1appdev.mealplanner.entity.UserEntity;

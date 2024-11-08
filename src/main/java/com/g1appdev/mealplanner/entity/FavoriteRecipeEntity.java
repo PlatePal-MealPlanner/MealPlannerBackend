@@ -18,13 +18,13 @@ public class FavoriteRecipeEntity {
 
     @ManyToOne  
     @JoinColumn(name = "user_id", nullable = false)  
-    private UserEntity user; // Assuming UserEntity is defined elsewhere  
+    private UserEntity user;  
 
     @ManyToOne  
     @JoinColumn(name = "recipe_id", nullable = false)  
-    private RecipeEntity recipe; // Assuming RecipeEntity is defined elsewhere  
+    private RecipeEntity recipe;  
 
-    // Getters and Setters  
+    
 
     public Long getFavoriteRecipeId() {  
         return favoriteRecipeId;  
