@@ -1,7 +1,16 @@
 package com.g1appdev.mealplanner.entity;  
 
-import jakarta.persistence.*;  
-import java.time.LocalDateTime;  
+import java.time.LocalDateTime;
+  
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
 
 @Entity  
 @Table(name = "tblmealplan")  
@@ -13,7 +22,7 @@ public class MealplanEntity {
 
     @ManyToOne  
     @JoinColumn(name = "user_id", nullable = false)  
-    private UserEntity user; // Ensure this is UserEntity  
+    private UserEntity user; 
 
     private LocalDateTime mealDate;  
 
@@ -21,7 +30,7 @@ public class MealplanEntity {
 
     private LocalDateTime updatedAt;  
 
-    // Lifecycle callbacks  
+    
     @PrePersist  
     protected void onCreate() {  
         createdAt = LocalDateTime.now();  
@@ -33,7 +42,7 @@ public class MealplanEntity {
         updatedAt = LocalDateTime.now();  
     }  
 
-    // Getters and Setters  
+   
     public Long getMealPlanId() {  
         return mealPlanId;  
     }  
@@ -42,11 +51,11 @@ public class MealplanEntity {
         this.mealPlanId = mealPlanId;  
     }  
 
-    public UserEntity getUser() { // Changed from User to UserEntity  
+    public UserEntity getUser() {
         return user;  
     }  
 
-    public void setUser(UserEntity user) { // Changed from User to UserEntity  
+    public void setUser(UserEntity user) {  
         this.user = user;  
     }  
 
