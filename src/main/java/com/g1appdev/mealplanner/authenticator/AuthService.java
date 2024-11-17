@@ -75,4 +75,16 @@ public class AuthService {
             throw new BadCredentialsException("Invalid email or password");
         }
     }
+
+    // Method to fetch user profile by decoding JWT token
+    public UserEntity getUserProfile(String token) {
+        // Decode the token and get the email (or any unique identifier)
+        String email = jwtService.getUserEmailFromToken(token);
+
+        // Fetch the user from the repository
+        UserEntity user = repository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+
+        return user; // Return the user profile
+    }
 }
