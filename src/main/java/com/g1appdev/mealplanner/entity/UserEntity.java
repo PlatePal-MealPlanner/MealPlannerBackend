@@ -30,10 +30,6 @@ public class UserEntity implements UserDetails {
     private String lname;
     private String email;
     private String pass;
-    private String allergies;
-    private String dietaryPref;
-    private String intolerance;
-    private String favCuisine;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -44,18 +40,13 @@ public class UserEntity implements UserDetails {
         super();
     }
 
-    public UserEntity(int userId, String fname, String lname, String email, String password, String allergies,
-            String dietaryPref, String intolerance, String favCuisine) {
+    public UserEntity(int userId, String fname, String lname, String email, String password) {
         super();
         this.userId = userId;
         this.fname = fname;
         this.lname = lname;
         this.email = email;
         this.pass = password;
-        this.allergies = allergies;
-        this.dietaryPref = dietaryPref;
-        this.intolerance = intolerance;
-        this.favCuisine = favCuisine;
     }
 
     public int getUserId() {
@@ -97,38 +88,6 @@ public class UserEntity implements UserDetails {
 
     public void setPassword(String password) {
         this.pass = password;
-    }
-
-    public String getAllergies() {
-        return allergies;
-    }
-
-    public void setAllergies(String allergies) {
-        this.allergies = allergies;
-    }
-
-    public String getDietaryPref() {
-        return dietaryPref;
-    }
-
-    public void setDietaryPref(String dietaryPref) {
-        this.dietaryPref = dietaryPref;
-    }
-
-    public String getIntolerance() {
-        return intolerance;
-    }
-
-    public void setIntolerance(String intolerance) {
-        this.intolerance = intolerance;
-    }
-
-    public String getFavCuisine() {
-        return favCuisine;
-    }
-
-    public void setFavCuisine(String favCuisine) {
-        this.favCuisine = favCuisine;
     }
 
     public void setRole(Role role) {
