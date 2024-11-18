@@ -15,6 +15,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig {
 
+
         private final jwtAuth jwtAuthFilter;
         private final AuthenticationProvider authenticationProvider;
 
@@ -33,6 +34,7 @@ public class SecurityConfig {
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers("/api/v1/auth/**").permitAll()
                                                 .requestMatchers("/api/recipe/**").permitAll()
+                                                .requestMatchers("/api/dishes/**").permitAll()
                                                 .requestMatchers("/api/v1/user/**").authenticated()
                                                 .anyRequest().authenticated())
                                 .cors(cors -> cors.configurationSource(corsConfigurationSource)) // Use the CORS
