@@ -14,24 +14,28 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-        @Autowired
-        jwtAuth jwtAuthFilter;
-        @Autowired
-        AuthenticationProvider authenticationProvider;
+    @Autowired
+    private jwtAuth jwtAuthFilter;
+    
+    @Autowired
+    private AuthenticationProvider authenticationProvider;
 
-        @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-                http
-                                .csrf(csrf -> csrf.disable())
-                                .authorizeHttpRequests(auth -> auth
-                                                .requestMatchers("/api/v1/auth/**").permitAll()
-                                                .requestMatchers("/api/recipe/**").permitAll()
-                                                .anyRequest().authenticated())
-                                .sessionManagement(session -> session
-                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                                .authenticationProvider(authenticationProvider)
-                                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable()) // Disable CSRF for testing; consider enabling it later for production
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/v1/auth/**").permitAll() // Allow all auth-related endpoints
+                        .requestMatchers("/api/recipe/**").permitAll() // Allow access to recipe endpoints
+                        .requestMatchers("/api/dishes/**").permitAll()
+                        .requestMatchers("/api/meal-plans/**").permitAll() // Explicitly allow access to dishes endpoint
+                        .anyRequest().authenticated() // All other requests require authentication
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless session for REST API
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-                return http.build();
-        }
+        return http.build();
+    }
 }
