@@ -6,7 +6,6 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -14,7 +13,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
 
         private final jwtAuth jwtAuthFilter;
         private final AuthenticationProvider authenticationProvider;
@@ -34,15 +32,14 @@ public class SecurityConfig {
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers("/api/v1/auth/**").permitAll()
                                                 .requestMatchers("/api/recipe/**").permitAll()
-                                                .requestMatchers("/api/dishes/**").permitAll()
+                                                .requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
+                                                .requestMatchers("/api/dishes/**").authenticated()
                                                 .requestMatchers("/api/v1/user/**").authenticated()
                                                 .anyRequest().authenticated())
-                                .cors(cors -> cors.configurationSource(corsConfigurationSource)) // Use the CORS
-                                                                                                 // configuration
+                                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                                 .authenticationProvider(authenticationProvider)
                                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
                 return http.build();
         }
-
 }

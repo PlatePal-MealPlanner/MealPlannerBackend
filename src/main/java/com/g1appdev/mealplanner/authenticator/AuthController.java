@@ -1,6 +1,7 @@
 package com.g1appdev.mealplanner.authenticator;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -30,8 +31,13 @@ public class AuthController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
-        return ResponseEntity.ok(auserve.authenticate(request));
+    public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequest request) {
+        try {
+            AuthenticationResponse response = auserve.authenticate(request);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+        }
     }
 
     @GetMapping("/me")
@@ -42,5 +48,11 @@ public class AuthController {
         UserEntity userProfile = auserve.getUserProfile(jwtToken);
 
         return ResponseEntity.ok(userProfile);
+    }
+
+    @PostMapping("/register-admin")
+    public ResponseEntity<AuthenticationResponse> registerAdmin(@RequestBody RegisterRequest request) {
+        System.out.println("Register request: " + request);
+        return ResponseEntity.ok(auserve.registerAdmin(request));
     }
 }

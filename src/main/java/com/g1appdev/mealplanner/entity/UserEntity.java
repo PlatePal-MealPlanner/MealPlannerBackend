@@ -40,13 +40,14 @@ public class UserEntity implements UserDetails {
         super();
     }
 
-    public UserEntity(int userId, String fname, String lname, String email, String password) {
+    public UserEntity(int userId, String fname, String lname, String email, String password, Role role) {
         super();
         this.userId = userId;
         this.fname = fname;
         this.lname = lname;
         this.email = email;
         this.pass = password;
+        this.role = role;
     }
 
     public int getUserId() {
@@ -88,6 +89,10 @@ public class UserEntity implements UserDetails {
 
     public void setPassword(String password) {
         this.pass = password;
+    }
+
+    public Role getRole() {
+        return role;
     }
 
     public void setRole(Role role) {
