@@ -9,6 +9,8 @@ import java.util.function.Function;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.g1appdev.mealplanner.entity.UserEntity;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -39,10 +41,12 @@ public class jwtService {
 
     // Generate token with additional claims (if any)
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        UserEntity user = (UserEntity) userDetails;
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername()) // Subject is typically the email
+                .claim("roles", user.getRole().name())
                 .setIssuedAt(new Date(System.currentTimeMillis())) // Issue time
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24)) // Expiration time (24 hours)
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256) // Sign the token with the secret key

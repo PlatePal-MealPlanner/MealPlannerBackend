@@ -2,7 +2,6 @@ package com.g1appdev.mealplanner.authenticator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +27,14 @@ public class AuthService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    public AuthService(AuthenticationManager authenticationManager, UserRepository repository, jwtService jwtService,
+            PasswordEncoder passwordEncoder) {
+        this.authenticationManager = authenticationManager;
+        this.repository = repository;
+        this.jwtService = jwtService;
+        this.passwordEncoder = passwordEncoder;
+    }
+
     // Register new user
     public AuthenticationResponse register(RegisterRequest request) {
         System.out.println("Registering user: " + request.getEmail());
@@ -49,31 +56,47 @@ public class AuthService {
 
         // Generate JWT token
         String jwtToken = jwtService.generateToken(userEntity);
-        return new AuthenticationResponse(jwtToken);
+        return new AuthenticationResponse(jwtToken, userEntity.getRole().name());
+    }
+
+    public AuthenticationResponse registerAdmin(RegisterRequest request) {
+        System.out.println("Registering admin: " + request.getEmail());
+
+        // Check if user already exists
+        if (repository.findByEmail(request.getEmail()).isPresent()) {
+            throw new IllegalStateException("Email is already registered.");
+        }
+
+        UserEntity adminEntity = new UserEntity();
+        adminEntity.setFName(request.getFname());
+        adminEntity.setLName(request.getLname());
+        adminEntity.setEmail(request.getEmail());
+        adminEntity.setPassword(passwordEncoder.encode(request.getPassword()));
+        adminEntity.setRole(Role.ADMIN); // Set role to ADMIN
+
+        // Save the admin to the database
+        repository.save(adminEntity);
+
+        // Generate JWT token
+        String jwtToken = jwtService.generateToken(adminEntity);
+        return new AuthenticationResponse(jwtToken, adminEntity.getRole().name());
     }
 
     // Authenticate existing user (login)
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        try {
-            // Authenticate the user
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getEmail(),
-                            request.getPassword()));
+        // Authenticate user
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
-            // Fetch the user from the database
-            UserEntity user = repository.findByEmail(request.getEmail())
-                    .orElseThrow(
-                            () -> new UsernameNotFoundException("User not found with email: " + request.getEmail()));
+        // Find the user in the database
+        UserEntity user = repository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-            // Generate a new JWT token
-            String jwtToken = jwtService.generateToken(user);
-            return new AuthenticationResponse(jwtToken);
+        // Generate JWT token
+        String token = jwtService.generateToken(user);
 
-        } catch (BadCredentialsException e) {
-            // Handle incorrect email or password
-            throw new BadCredentialsException("Invalid email or password");
-        }
+        // Return token and role
+        return new AuthenticationResponse(token, user.getRole().name());
     }
 
     // Method to fetch user profile by decoding JWT token
