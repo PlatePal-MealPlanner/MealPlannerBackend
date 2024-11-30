@@ -40,6 +40,39 @@ public class AdminController {
         return ResponseEntity.ok(users);
     }
 
+    // Update a user
+    @PutMapping("/users/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<UserEntity> updateUser(@PathVariable Integer id, @RequestBody UserEntity updatedUser) {
+        Optional<UserEntity> userOpt = userRepository.findById(id);
+        if (userOpt.isPresent()) {
+            UserEntity user = userOpt.get();
+
+            // Update user fields
+            user.setFName(updatedUser.getFName());
+            user.setLName(updatedUser.getLName());
+            user.setEmail(updatedUser.getEmail());
+            user.setRole(updatedUser.getRole());
+
+            // Save updated user
+            userRepository.save(user);
+
+            return ResponseEntity.ok(user);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    // Delete a user
+    @DeleteMapping("/users/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     // Add a new recipe
     @PostMapping("/recipes")
     public ResponseEntity<RecipeEntity> addRecipe(@RequestBody RecipeEntity recipe) {

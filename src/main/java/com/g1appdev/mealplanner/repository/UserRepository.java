@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.g1appdev.mealplanner.entity.UserEntity;
 
-public interface UserRepository extends JpaRepository<UserEntity, Integer>{
-    
+public interface UserRepository extends JpaRepository<UserEntity, Integer> {
+
     Optional<UserEntity> findByEmail(String email);
 }
