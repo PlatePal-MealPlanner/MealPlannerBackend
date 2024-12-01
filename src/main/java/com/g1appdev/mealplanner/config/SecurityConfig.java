@@ -32,7 +32,7 @@ public class SecurityConfig {
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers("/api/v1/auth/**").permitAll()
                                                 .requestMatchers("/api/recipe/**").permitAll()
-                                                .requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
+                                                .requestMatchers("/api/v1/admin/**").permitAll()
                                                 .requestMatchers("/api/dishes/**").authenticated()
                                                 .requestMatchers("/api/v1/user/**").authenticated()
                                                 .anyRequest().authenticated())
