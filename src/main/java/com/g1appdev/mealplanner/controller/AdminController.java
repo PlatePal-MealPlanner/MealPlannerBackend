@@ -1,8 +1,10 @@
 package com.g1appdev.mealplanner.controller;
 
+import com.g1appdev.mealplanner.dto.UserProfileDTO;
 import com.g1appdev.mealplanner.entity.UserEntity;
 import com.g1appdev.mealplanner.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,12 +40,18 @@ public class AdminController {
 
     // Update user
     @PutMapping("/users/{id}")
-    public ResponseEntity<UserEntity> updateUser(@PathVariable long id, @RequestBody UserEntity updatedUser) {
-        UserEntity updated = userService.updateUser(id, updatedUser); // Call the UserService to update
-        if (updated != null) {
-            return ResponseEntity.ok(updated);
+    public ResponseEntity<String> updateUserProfile(@PathVariable("id") long userId,
+            @RequestBody UserProfileDTO userProfileDTO) {
+        try {
+            // Call the service to update the user profile
+            userService.updateUserProfile(userId, userProfileDTO);
+            return ResponseEntity.ok("User updated successfully.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to update user: " + e.getMessage());
         }
-        return ResponseEntity.notFound().build();
     }
 
     // Delete user
