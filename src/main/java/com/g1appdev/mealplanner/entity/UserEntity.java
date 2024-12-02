@@ -24,16 +24,12 @@ public class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int userId;
+    private long userId; // Changed from int to long
 
     private String fname;
     private String lname;
     private String email;
     private String pass;
-    private String allergies;
-    private String dietaryPref;
-    private String intolerance;
-    private String favCuisine;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -44,25 +40,21 @@ public class UserEntity implements UserDetails {
         super();
     }
 
-    public UserEntity(int userId, String fname, String lname, String email, String password, String allergies,
-            String dietaryPref, String intolerance, String favCuisine) {
+    public UserEntity(long userId, String fname, String lname, String email, String password, Role role) {
         super();
         this.userId = userId;
         this.fname = fname;
         this.lname = lname;
         this.email = email;
         this.pass = password;
-        this.allergies = allergies;
-        this.dietaryPref = dietaryPref;
-        this.intolerance = intolerance;
-        this.favCuisine = favCuisine;
+        this.role = role;
     }
 
-    public int getUserId() {
+    public long getUserId() { // Changed return type to long
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) { // Changed parameter type to long
         this.userId = userId;
     }
 
@@ -99,36 +91,8 @@ public class UserEntity implements UserDetails {
         this.pass = password;
     }
 
-    public String getAllergies() {
-        return allergies;
-    }
-
-    public void setAllergies(String allergies) {
-        this.allergies = allergies;
-    }
-
-    public String getDietaryPref() {
-        return dietaryPref;
-    }
-
-    public void setDietaryPref(String dietaryPref) {
-        this.dietaryPref = dietaryPref;
-    }
-
-    public String getIntolerance() {
-        return intolerance;
-    }
-
-    public void setIntolerance(String intolerance) {
-        this.intolerance = intolerance;
-    }
-
-    public String getFavCuisine() {
-        return favCuisine;
-    }
-
-    public void setFavCuisine(String favCuisine) {
-        this.favCuisine = favCuisine;
+    public Role getRole() {
+        return role;
     }
 
     public void setRole(Role role) {
@@ -182,5 +146,4 @@ public class UserEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 }
