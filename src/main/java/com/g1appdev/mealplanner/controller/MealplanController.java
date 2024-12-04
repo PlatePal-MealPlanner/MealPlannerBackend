@@ -44,7 +44,8 @@ public class MealplanController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MealplanEntity> updateMealPlan(@PathVariable Long id, @Validated @RequestBody MealplanEntity mealplanDetails) {
+    public ResponseEntity<MealplanEntity> updateMealPlan(@PathVariable Long id,
+            @Validated @RequestBody MealplanEntity mealplanDetails) {
         Optional<MealplanEntity> mealPlanOptional = mealplanService.getMealPlanById(id);
         if (mealPlanOptional.isPresent()) {
             MealplanEntity updatedMealPlan = mealplanService.updateMealPlan(id, mealplanDetails);
