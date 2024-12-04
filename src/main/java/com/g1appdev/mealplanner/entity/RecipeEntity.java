@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -28,6 +29,12 @@ public class RecipeEntity {
     private String cuisineType;
     private String mealType;
     private double ratingsAverage;
+
+    private String imagePath;
+
+    @Lob
+    private byte[] image; // Added image field for storing image data
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -38,8 +45,10 @@ public class RecipeEntity {
         super();
     }
 
+    // Updated Constructor
     public RecipeEntity(int recipeId, String title, String description, String ingredients, int prepTime,
-            String nutritionInfo, String cuisineType, String mealType, double ratingsAverage) {
+            String nutritionInfo, String cuisineType, String mealType, double ratingsAverage, byte[] image,
+            String imagePath) {
         super();
         this.recipeId = recipeId;
         this.title = title;
@@ -50,8 +59,11 @@ public class RecipeEntity {
         this.cuisineType = cuisineType;
         this.mealType = mealType;
         this.ratingsAverage = ratingsAverage;
+        this.image = image;
+        this.imagePath = imagePath;
     }
 
+    // Getters and Setters
     public int getRecipeId() {
         return recipeId;
     }
@@ -122,6 +134,22 @@ public class RecipeEntity {
 
     public void setRatingsAverage(double ratingsAverage) {
         this.ratingsAverage = ratingsAverage;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public LocalDateTime getCreatedAt() {
