@@ -24,7 +24,7 @@ public class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int userId;
+    private long userId; // Changed from int to long
 
     private String fname;
     private String lname;
@@ -40,7 +40,7 @@ public class UserEntity implements UserDetails {
         super();
     }
 
-    public UserEntity(int userId, String fname, String lname, String email, String password, Role role) {
+    public UserEntity(long userId, String fname, String lname, String email, String password, Role role) {
         super();
         this.userId = userId;
         this.fname = fname;
@@ -50,11 +50,11 @@ public class UserEntity implements UserDetails {
         this.role = role;
     }
 
-    public int getUserId() {
+    public long getUserId() { // Changed return type to long
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) { // Changed parameter type to long
         this.userId = userId;
     }
 
@@ -146,5 +146,4 @@ public class UserEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 }
