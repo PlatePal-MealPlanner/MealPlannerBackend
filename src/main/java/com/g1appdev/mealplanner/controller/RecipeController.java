@@ -36,10 +36,7 @@ public class RecipeController {
     @GetMapping("/allrecipe")
     public ResponseEntity<List<RecipeEntity>> getAllRecipes() {
         List<RecipeEntity> recipes = rserve.getAllRecipes();
-        if (recipes.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(recipes, HttpStatus.OK);
+        return ResponseEntity.ok(recipes); // Return the list even if empty
     }
 
     @GetMapping("/{id}")
