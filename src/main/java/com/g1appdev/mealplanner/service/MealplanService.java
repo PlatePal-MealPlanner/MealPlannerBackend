@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.g1appdev.mealplanner.entity.MealplanEntity;
+import com.g1appdev.mealplanner.entity.RecipeEntity;
 import com.g1appdev.mealplanner.entity.UserEntity;
-import com.g1appdev.mealplanner.entity.Dish;
 import com.g1appdev.mealplanner.repository.MealplanRepository;
+import com.g1appdev.mealplanner.repository.RecipeRepository;
 import com.g1appdev.mealplanner.repository.UserRepository;
-import com.g1appdev.mealplanner.repository.DishRepository;
 
 @Service
 public class MealplanService {
@@ -24,7 +24,7 @@ public class MealplanService {
     private UserRepository userRepository;
 
     @Autowired
-    private DishRepository dishRepository;
+    private RecipeRepository recipeRepository;
 
     public List<MealplanEntity> getAllMealPlans() {
         return mealplanRepository.findAll();
@@ -43,17 +43,19 @@ public class MealplanService {
         }
     }
 
-    public MealplanEntity createMealPlanWithDish(MealplanEntity mealplan) {
-        Optional<Dish> dishOptional = dishRepository.findById(mealplan.getDish().getId());
-        if (dishOptional.isPresent()) {
-            mealplan.setDish(dishOptional.get());
-            mealplan.setMealDate(mealplan.getMealDate() != null ? mealplan.getMealDate() : LocalDateTime.now());
-            return mealplanRepository.save(mealplan);
-        } else {
-            throw new RuntimeException("Dish not found");
-        }
-    }
+    public MealplanEntity createMealPlanWithRecipe(MealplanEntity mealPlan) {
+        RecipeEntity recipe = recipeRepository.findById(mealPlan.getRecipe().getRecipeId())
+                .orElseThrow(() -> new IllegalArgumentException("Recipe not found"));
     
+        mealPlan.setRecipe(recipe);
+    
+        // Set meal date if not provided
+        if (mealPlan.getMealDate() == null) {
+            mealPlan.setMealDate(LocalDateTime.now());
+        }
+    
+        return mealplanRepository.save(mealPlan);
+    }
 
     public MealplanEntity updateMealPlan(Long id, MealplanEntity mealplanDetails) {
         MealplanEntity mealplan = mealplanRepository.findById(id)

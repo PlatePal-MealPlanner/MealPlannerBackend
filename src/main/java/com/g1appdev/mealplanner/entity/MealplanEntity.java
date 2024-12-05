@@ -21,12 +21,12 @@ public class MealplanEntity {
     private Long mealPlanId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = true) // Nullable for cases where only Dish data is provided
+    @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
     @ManyToOne
-    @JoinColumn(name = "dish_id", nullable = true) // Nullable for cases where only User is provided
-    private Dish dish;
+    @JoinColumn(name = "recipe_id", nullable = false)
+    private RecipeEntity recipe;
 
     private LocalDateTime mealDate;
 
@@ -62,12 +62,12 @@ public class MealplanEntity {
         this.user = user;
     }
 
-    public Dish getDish() {
-        return dish;
+    public RecipeEntity getRecipe() {
+        return recipe;
     }
 
-    public void setDish(Dish dish) {
-        this.dish = dish;
+    public void setRecipe(RecipeEntity recipe) {
+        this.recipe = recipe;
     }
 
     public LocalDateTime getMealDate() {

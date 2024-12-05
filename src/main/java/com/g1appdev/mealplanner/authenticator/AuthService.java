@@ -83,21 +83,21 @@ public class AuthService {
     }
 
     // Authenticate existing user (login)
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        // Authenticate user
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-
-        // Find the user in the database
-        UserEntity user = repository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        // Generate JWT token
-        String token = jwtService.generateToken(user);
-
-        // Return token and role
-        return new AuthenticationResponse(token, user.getRole().name());
-    }
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {  
+        // Authenticate user  
+        authenticationManager.authenticate(  
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));  
+    
+        // Find the user in the database  
+        UserEntity user = repository.findByEmail(request.getEmail())  
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));  
+    
+        // Generate JWT token  
+        String token = jwtService.generateToken(user);  
+    
+        // Return token, role, and userId  
+        return new AuthenticationResponse(token, user.getRole().name(), user.getUserId()); // Include userId  
+    }  
 
     // Method to fetch user profile by decoding JWT token
     public UserEntity getUserProfile(String token) {
