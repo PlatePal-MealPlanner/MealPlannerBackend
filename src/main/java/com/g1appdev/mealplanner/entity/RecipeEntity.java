@@ -2,6 +2,9 @@ package com.g1appdev.mealplanner.entity;
 
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -29,6 +33,10 @@ public class RecipeEntity {
     private String cuisineType;
     private String mealType;
     private double ratingsAverage;
+
+    @OneToMany(mappedBy = "recipe")
+    @JsonBackReference
+    private List<MealplanEntity> mealPlans;
 
     private String imagePath;
 

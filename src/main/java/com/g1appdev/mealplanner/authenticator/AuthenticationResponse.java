@@ -1,37 +1,40 @@
-package com.g1appdev.mealplanner.authenticator;  
+package com.g1appdev.mealplanner.authenticator;
 
-public class AuthenticationResponse {  
-    private String token;  
-    private String role;  
-    private Long userId; // Add userId field  
+public class AuthenticationResponse {
 
-    public AuthenticationResponse(String token, String role, Long userId) {  
-        this.token = token;  
-        this.role = role;  
-        this.userId = userId; // Initialize userId  
-    }  
+    private String token;
+    private String role;
+    private Long userId;
 
-    public String getToken() {  
-        return token;  
-    }  
+    // Constructor for all required fields
+    public AuthenticationResponse(String token, String role, Long userId) {
+        this.token = token;
+        this.role = role;
+        this.userId = userId;
+    }
 
-    public void setToken(String token) {  
-        this.token = token;  
-    }  
+    // Getters and Setters
+    public String getToken() {
+        return token;
+    }
 
-    public String getRole() {  
-        return role;  
-    }  
+    public void setToken(String token) {
+        this.token = token;
+    }
 
-    public void setRole(String role) {  
-        this.role = role;  
-    }  
+    public String getRole() {
+        return role;
+    }
 
-    public Long getUserId() { // Getter for userId  
-        return userId;  
-    }  
+    public void setRole(String role) {
+        this.role = role;
+    }
 
-    public void setUserId(Long userId) { // Setter for userId  
-        this.userId = userId;  
-    }  
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 }
