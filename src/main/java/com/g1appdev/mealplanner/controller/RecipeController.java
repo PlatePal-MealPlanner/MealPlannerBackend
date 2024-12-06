@@ -113,13 +113,16 @@ public class RecipeController {
             Resource resource = new UrlResource(filePath.toUri());
 
             if (resource.exists()) {
+                System.out.println("Serving image: " + filename);
                 return ResponseEntity.ok()
                         .header("Content-Type", Files.probeContentType(filePath))
                         .body(resource);
             } else {
+                System.err.println("Image not found: " + filename);
                 return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
+            System.err.println("Error serving image: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

@@ -2,6 +2,8 @@ package com.g1appdev.mealplanner.entity;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,10 +24,12 @@ public class MealplanEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonManagedReference
     private UserEntity user;
 
     @ManyToOne
     @JoinColumn(name = "recipe_id", nullable = false)
+    @JsonManagedReference
     private RecipeEntity recipe;
 
     private LocalDateTime mealDate;

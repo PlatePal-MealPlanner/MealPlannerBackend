@@ -56,7 +56,7 @@ public class AuthService {
 
         // Generate JWT token
         String jwtToken = jwtService.generateToken(userEntity);
-        return new AuthenticationResponse(jwtToken, userEntity.getRole().name());
+        return new AuthenticationResponse(jwtToken, userEntity.getRole().name(), userEntity.getUserId());
     }
 
     public AuthenticationResponse registerAdmin(RegisterRequest request) {
@@ -79,25 +79,25 @@ public class AuthService {
 
         // Generate JWT token
         String jwtToken = jwtService.generateToken(adminEntity);
-        return new AuthenticationResponse(jwtToken, adminEntity.getRole().name());
+        return new AuthenticationResponse(jwtToken, adminEntity.getRole().name(), adminEntity.getUserId());
     }
 
     // Authenticate existing user (login)
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {  
-        // Authenticate user  
-        authenticationManager.authenticate(  
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));  
-    
-        // Find the user in the database  
-        UserEntity user = repository.findByEmail(request.getEmail())  
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));  
-    
-        // Generate JWT token  
-        String token = jwtService.generateToken(user);  
-    
-        // Return token, role, and userId  
-        return new AuthenticationResponse(token, user.getRole().name(), user.getUserId()); // Include userId  
-    }  
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        // Authenticate user
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+
+        // Find the user in the database
+        UserEntity user = repository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        // Generate JWT token
+        String token = jwtService.generateToken(user);
+
+        // Return token, role, and userId
+        return new AuthenticationResponse(token, user.getRole().name(), user.getUserId());
+    }
 
     // Method to fetch user profile by decoding JWT token
     public UserEntity getUserProfile(String token) {
