@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.g1appdev.mealplanner.entity.MealplanEntity;
+import com.g1appdev.mealplanner.entity.RecipeEntity;
 import com.g1appdev.mealplanner.entity.UserEntity;
-import com.g1appdev.mealplanner.entity.Dish;
 import com.g1appdev.mealplanner.repository.MealplanRepository;
+import com.g1appdev.mealplanner.repository.RecipeRepository;
 import com.g1appdev.mealplanner.repository.UserRepository;
-import com.g1appdev.mealplanner.repository.DishRepository;
 
 @Service
 public class MealplanService {
@@ -24,10 +24,24 @@ public class MealplanService {
     private UserRepository userRepository;
 
     @Autowired
-    private DishRepository dishRepository;
+    private RecipeRepository recipeRepository;
+
+    public List<MealplanEntity> getMealPlansByUser(Long userId) {
+        Optional<UserEntity> userOptional = userRepository.findById(userId);
+        if (!userOptional.isPresent()) {
+            throw new RuntimeException("User not found with ID: " + userId);
+        }
+        return mealplanRepository.findByUser(userOptional.get());
+    }
 
     public List<MealplanEntity> getAllMealPlans() {
-        return mealplanRepository.findAll();
+        List<MealplanEntity> mealPlans = mealplanRepository.findAll();
+        for (MealplanEntity mealPlan : mealPlans) {
+            if (mealPlan.getRecipe() == null) {
+                System.err.println("Error: Meal plan with ID " + mealPlan.getMealPlanId() + " has no recipe.");
+            }
+        }
+        return mealPlans;
     }
 
     public Optional<MealplanEntity> getMealPlanById(Long id) {
@@ -35,25 +49,35 @@ public class MealplanService {
     }
 
     public MealplanEntity createMealPlan(MealplanEntity mealplan) {
-        Optional<UserEntity> userOptional = userRepository.findById(mealplan.getUser().getUserId());
-        if (userOptional.isPresent()) {
-            return mealplanRepository.save(mealplan);
-        } else {
-            throw new RuntimeException("User not found");
-        }
+        Long userId = mealplan.getUser().getUserId();
+        Integer recipeId = mealplan.getRecipe().getRecipeId();
+
+        // Validate User
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+
+        // Validate Recipe
+        RecipeEntity recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new RuntimeException("Recipe not found with ID: " + recipeId));
+
+        mealplan.setUser(user);
+        mealplan.setRecipe(recipe);
+        return mealplanRepository.save(mealplan);
     }
 
-    public MealplanEntity createMealPlanWithDish(MealplanEntity mealplan) {
-        Optional<Dish> dishOptional = dishRepository.findById(mealplan.getDish().getId());
-        if (dishOptional.isPresent()) {
-            mealplan.setDish(dishOptional.get());
-            mealplan.setMealDate(mealplan.getMealDate() != null ? mealplan.getMealDate() : LocalDateTime.now());
-            return mealplanRepository.save(mealplan);
-        } else {
-            throw new RuntimeException("Dish not found");
+    public MealplanEntity createMealPlanWithRecipe(MealplanEntity mealPlan) {
+        RecipeEntity recipe = recipeRepository.findById(mealPlan.getRecipe().getRecipeId())
+                .orElseThrow(() -> new IllegalArgumentException("Recipe not found"));
+
+        mealPlan.setRecipe(recipe);
+
+        // Set meal date if not provided
+        if (mealPlan.getMealDate() == null) {
+            mealPlan.setMealDate(LocalDateTime.now());
         }
+
+        return mealplanRepository.save(mealPlan);
     }
-    
 
     public MealplanEntity updateMealPlan(Long id, MealplanEntity mealplanDetails) {
         MealplanEntity mealplan = mealplanRepository.findById(id)

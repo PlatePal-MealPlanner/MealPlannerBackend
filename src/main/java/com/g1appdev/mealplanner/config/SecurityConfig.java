@@ -33,9 +33,10 @@ public class SecurityConfig {
                                                 .requestMatchers("/api/v1/auth/**").permitAll()
                                                 .requestMatchers("/api/recipe/**").permitAll()
                                                 .requestMatchers("/api/v1/admin/**").hasAnyAuthority("ADMIN")
-                                                .requestMatchers("/api/dishes/**").authenticated()
+                                                .requestMatchers("/api/dishes/**").permitAll()
+                                                .requestMatchers("/api/meal-plans/**").permitAll()
                                                 .requestMatchers("/api/v1/user/**").authenticated()
-                                                .anyRequest().authenticated())
+                                                .anyRequest().permitAll())
                                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
                                 .authenticationProvider(authenticationProvider)
                                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

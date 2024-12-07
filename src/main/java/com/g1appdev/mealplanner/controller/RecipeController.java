@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -114,13 +113,16 @@ public class RecipeController {
             Resource resource = new UrlResource(filePath.toUri());
 
             if (resource.exists()) {
+                System.out.println("Serving image: " + filename);
                 return ResponseEntity.ok()
                         .header("Content-Type", Files.probeContentType(filePath))
                         .body(resource);
             } else {
+                System.err.println("Image not found: " + filename);
                 return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
+            System.err.println("Error serving image: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -128,10 +130,7 @@ public class RecipeController {
     @GetMapping("/allrecipe")
     public ResponseEntity<List<RecipeEntity>> getAllRecipes() {
         List<RecipeEntity> recipes = rserve.getAllRecipes();
-        if (recipes.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(recipes, HttpStatus.OK);
+        return ResponseEntity.ok(recipes); // Return the list even if empty
     }
 
     @GetMapping("/{id}")

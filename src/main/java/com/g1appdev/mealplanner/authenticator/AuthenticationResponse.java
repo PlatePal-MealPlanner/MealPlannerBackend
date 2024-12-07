@@ -1,14 +1,19 @@
 package com.g1appdev.mealplanner.authenticator;
 
 public class AuthenticationResponse {
+
     private String token;
     private String role;
+    private Long userId;
 
-    public AuthenticationResponse(String token, String role) {
+    // Constructor for all required fields
+    public AuthenticationResponse(String token, String role, Long userId) {
         this.token = token;
         this.role = role;
+        this.userId = userId;
     }
 
+    // Getters and Setters
     public String getToken() {
         return token;
     }
@@ -23,5 +28,13 @@ public class AuthenticationResponse {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }
