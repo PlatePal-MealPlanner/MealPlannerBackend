@@ -41,10 +41,17 @@ public class MealplanController {
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> getMealPlansByUser(@PathVariable Long userId) {
         try {
+            System.out.println("Fetching meal plans for user ID: " + userId);
             List<MealplanEntity> mealPlans = mealplanService.getMealPlansByUser(userId);
+
+            // If no meal plans found, return 204 No Content
             if (mealPlans.isEmpty()) {
+                System.out.println("No meal plans found for user ID: " + userId);
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No meal plans found for the user.");
             }
+
+            // If meal plans exist, return them
+            System.out.println("Meal plans retrieved successfully for user ID: " + userId);
             return ResponseEntity.ok(mealPlans);
         } catch (Exception e) {
             System.err.println("Error fetching meal plans for user ID " + userId + ": " + e.getMessage());
@@ -53,7 +60,7 @@ public class MealplanController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<MealplanEntity>> getAllMealPlans() {
         try {
             List<MealplanEntity> mealPlans = mealplanService.getAllMealPlans();
