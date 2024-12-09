@@ -36,16 +36,6 @@ public class MealplanService {
         return mealPlans;
     }
 
-    public List<MealplanEntity> getAllMealPlans() {
-        List<MealplanEntity> mealPlans = mealplanRepository.findAll();
-        for (MealplanEntity mealPlan : mealPlans) {
-            if (mealPlan.getRecipe() == null) {
-                System.err.println("Error: Meal plan with ID " + mealPlan.getMealPlanId() + " has no recipe.");
-            }
-        }
-        return mealPlans;
-    }
-
     public Optional<MealplanEntity> getMealPlanById(Long id) {
         return mealplanRepository.findById(id);
     }
@@ -95,7 +85,18 @@ public class MealplanService {
         }
     }
 
-    public void deleteMealPlan(Long id) {
-        mealplanRepository.deleteById(id);
+    
+    public List<MealplanEntity> getAllMealPlans() {
+        return mealplanRepository.findAll(); // Assuming you are using JpaRepository to fetch all meal plans
     }
+    public boolean deleteMealPlan(long mealPlanId) {
+        Optional<MealplanEntity> mealPlanOpt = mealplanRepository.findById(mealPlanId); // Find meal plan by ID
+        if (mealPlanOpt.isPresent()) {
+            mealplanRepository.delete(mealPlanOpt.get()); // Delete the meal plan
+            return true;
+        }
+        return false; // Return false if the meal plan was not found
+    }
+    
+    
 }
