@@ -27,11 +27,13 @@ public class MealplanService {
     private RecipeRepository recipeRepository;
 
     public List<MealplanEntity> getMealPlansByUser(Long userId) {
-        Optional<UserEntity> userOptional = userRepository.findById(userId);
-        if (!userOptional.isPresent()) {
-            throw new RuntimeException("User not found with ID: " + userId);
-        }
-        return mealplanRepository.findByUser(userOptional.get());
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+
+        List<MealplanEntity> mealPlans = mealplanRepository.findByUser(user);
+
+        // Allow meal plans with null recipes to be returned
+        return mealPlans;
     }
 
     public List<MealplanEntity> getAllMealPlans() {
