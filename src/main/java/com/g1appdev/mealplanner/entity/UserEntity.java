@@ -8,12 +8,17 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -32,6 +37,10 @@ public class UserEntity implements UserDetails {
     private String pass;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonBackReference
+    private List<MealplanEntity> mealPlans;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -145,5 +154,12 @@ public class UserEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+    public List<MealplanEntity> getMealPlans() {
+        return mealPlans;
+    }
+    
+    public void setMealPlans(List<MealplanEntity> mealPlans) {
+        this.mealPlans = mealPlans;
     }
 }
