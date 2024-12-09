@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,20 +42,12 @@ public class MealplanController {
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> getMealPlansByUser(@PathVariable Long userId) {
         try {
-            System.out.println("Fetching meal plans for user ID: " + userId);
             List<MealplanEntity> mealPlans = mealplanService.getMealPlansByUser(userId);
-
-            // If no meal plans found, return 204 No Content
             if (mealPlans.isEmpty()) {
-                System.out.println("No meal plans found for user ID: " + userId);
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No meal plans found for the user.");
             }
-
-            // If meal plans exist, return them
-            System.out.println("Meal plans retrieved successfully for user ID: " + userId);
             return ResponseEntity.ok(mealPlans);
         } catch (Exception e) {
-            System.err.println("Error fetching meal plans for user ID " + userId + ": " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An error occurred while fetching meal plans.");
         }
@@ -95,10 +88,12 @@ public class MealplanController {
             RecipeEntity recipe = recipeRepository.findById(recipeId.intValue())
                     .orElseThrow(() -> new IllegalArgumentException("Recipe not found with ID: " + recipeId));
 
+            // Create Mealplan entity
             MealplanEntity mealPlan = new MealplanEntity();
             mealPlan.setUser(user);
             mealPlan.setRecipe(recipe);
             mealPlan.setMealDate(LocalDateTime.now());
+            mealPlan.setMealType(recipe.getMealType()); // Capture the meal type from the recipe
 
             MealplanEntity createdMealPlan = mealplanService.createMealPlan(mealPlan);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdMealPlan);

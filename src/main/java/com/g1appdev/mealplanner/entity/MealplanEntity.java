@@ -34,6 +34,8 @@ public class MealplanEntity {
 
     private LocalDateTime mealDate;
 
+    private String mealType; // New field for meal type
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
@@ -72,6 +74,10 @@ public class MealplanEntity {
 
     public void setRecipe(RecipeEntity recipe) {
         this.recipe = recipe;
+        // Set the mealType based on the associated recipe
+        if (recipe != null) {
+            this.mealType = recipe.getMealType();
+        }
     }
 
     public LocalDateTime getMealDate() {
@@ -80,6 +86,14 @@ public class MealplanEntity {
 
     public void setMealDate(LocalDateTime mealDate) {
         this.mealDate = mealDate;
+    }
+
+    public String getMealType() {
+        return mealType;
+    }
+
+    public void setMealType(String mealType) {
+        this.mealType = mealType;
     }
 
     public LocalDateTime getCreatedAt() {
